@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handwritten Text Recognition</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #00c6ff, #0072ff);
+            margin: 0;
+            padding: 0;
+            color: #fff;
+        }
+
+        header {
+            text-align: center;
+            padding: 50px;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 0;
+            font-weight: bold;
+            letter-spacing: 2px;
+            animation: fadeIn 2s ease-out;
+        }
+
+        .upload-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 30px;
+            background-color: rgba(0, 0, 0, 0.5);
+            margin: 50px auto;
+            border-radius: 15px;
+            width: 80%;
+            max-width: 600px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .upload-container input[type="file"] {
+            padding: 10px;
+            font-size: 1.2rem;
+            color: #0072ff;
+            margin-bottom: 20px;
+            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        .upload-container button {
+            padding: 12px 25px;
+            font-size: 1.1rem;
+            background-color: #00c6ff;
+            border: none;
+            color: #fff;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .upload-container button:hover {
+            background-color: #0072ff;
+        }
+
+        .upload-container button:active {
+            transform: scale(0.98);
+        }
+
+        .text-result {
+            margin-top: 40px;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            width: 80%;
+            max-width: 600px;
+            text-align: left;
+        }
+
+        .text-result h2 {
+            margin: 0;
+            font-size: 2rem;
+            margin-bottom: 20px;
+        }
+
+        .text-result ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .text-result li {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .text-result a {
+            display: inline-block;
+            padding: 12px 20px;
+            margin-top: 20px;
+            font-size: 1.2rem;
+            background-color: #00c6ff;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+
+        .text-result a:hover {
+            background-color: #0072ff;
+        }
+
+        .file-preview {
+            margin-top: 20px;
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 10px;
+            object-fit: contain;
+            display: none;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #111;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .footer p {
+            margin: 0;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        @keyframes fadeIn {
+            0% {
+                opacity: 0;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Handwritten Text Recognition</h1>
+    </header>
+
+    <!-- Form to upload an image -->
+    <div class="upload-container">
+        <form action="/upload" method="post" enctype="multipart/form-data">
+            <input type="file" id="imageUpload" name="file" accept="image/*" onchange="previewImage()">
+            <button type="submit">Upload Image</button>
+        </form>
+        
+        <img id="imagePreview" class="file-preview" alt="Image Preview">
+    </div>
+
+    <!-- Display the extracted text if available -->
+    {% if extracted_text %}
+    <div class="text-result">
+        <h2>Extracted Text:</h2>
+        <ul>
+            {% for text in extracted_text %}
+            <li>{{ text }}</li>
+            {% endfor %}
+        </ul>
+        <a href="/download?extracted_text={{ extracted_text }}" download="extracted_text.txt">Download Text</a>
+    </div>
+    {% endif %}
+
+    <div class="footer">
+        <p>&copy; 2024 Handwritten Text Recognition. All Rights Reserved.</p>
+    </div>
+
+    <script>
+        function previewImage() {
+            const file = document.getElementById("imageUpload").files[0];
+            const reader = new FileReader();
+
+            reader.onload = function (e) {
+                const preview = document.getElementById("imagePreview");
+                preview.src = e.target.result;
+                preview.style.display = "block";
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
